@@ -419,41 +419,29 @@ class UserCreateAPIViewphone(APIView):
 
 class UserCreateAPIViewemail(APIView):
     def post(self, request, format=None):
-        otp_phone = request.data["otp"]
-        authorization_header = request.headers.get('Authorization')
+        data = request.data
 
-        if not authorization_header or not authorization_header.startswith('Bearer '):
-            raise AuthenticationFailed('Invalid or missing Bearer token!')
+        # Validate the required fields
+        required_fields = ['firstname', 'lastname', 'user_type', 'street', 'city', 'state', 'zip_code']
+        for field in required_fields:
+            if field not in data or not data[field]:
+                return Response({f"{field}": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
 
-        token = authorization_header.split('Bearer ')[1].strip()  # Strip whitespaces
+        # Create the User object
+        user = User.objects.create(
+            firstname=data['firstname'],
+            lastname=data['lastname'],
+            user_type=data['user_type'],
+           
+            street=data['street'],
+            city=data['city'],
+            state=data['state'],
+            zip_code=data['zip_code'],
+        )
 
-        try:
-            # Make sure to use the same secret key that was used to encode the JWT
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('JWT has expired!')
-        except jwt.DecodeError:
-            raise AuthenticationFailed('JWT is invalid!')
-
-        email = payload.get('email')
-        password = payload.get('password')
-        fullname = payload.get('fullname')
-        saved_otp = payload.get('otp')  # Get the OTP from the payload
-
-        # Check if the provided OTP matches the saved OTP
-        if otp_phone != saved_otp:
-            raise AuthenticationFailed('OTP does not match!')
-
-        # Hash the password before saving it
-        serializer = UserCreateSerializeremail(data={'email': email, 'password': password, 'fullname': fullname})
-
-        if serializer.is_valid():
-            # Save the user object after validation
-            user = serializer.save()
-            return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response({"id": user.id, "message": "User created successfully"}, status=status.HTTP_201_CREATED) 
+        
+    
 
 
 

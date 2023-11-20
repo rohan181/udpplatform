@@ -8,7 +8,7 @@ from .models import User,Profileinfo1,Profileinfolocationbd,Profileinfolocationa
 class UserCreateSerializerphone(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('fullname', 'phone_number', 'password')
+        fields = ('phone_number', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -23,7 +23,7 @@ class UserCreateSerializerphone(serializers.ModelSerializer):
 class UserCreateSerializeremail(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('fullname', 'email', 'password')
+        fields = ( 'email', 'password')
         extra_kwargs = {
             'password': {'write_only': True},
         }
@@ -37,7 +37,7 @@ class UserCreateSerializeremail(serializers.ModelSerializer):
 
 class UserSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    fullname = serializers.CharField()
+    firstname = serializers.CharField()
    
     email = serializers.CharField()
     password = serializers.CharField(write_only=True)
@@ -51,7 +51,7 @@ class UserSerializer(serializers.Serializer):
 class ProfileCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profileinfo1
-        fields = ('user_name', 'gender', 'date_of_birth','fullname','profilephoto')  # Include only the fields that users can provide when creating a profile
+        fields = ('user_name', 'gender', 'date_of_birth','profilephoto')  # Include only the fields that users can provide when creating a profile
 
 
 class Profileloactionbd(serializers.ModelSerializer):

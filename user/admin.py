@@ -4,7 +4,7 @@ from . import models
 from .models import Profileinfo1, Profileinfolocationbd, Profileinfolocationabroad, Profileinfoexperience,Profilecomplete1, Profilecomplete2, Profilecomplete3, Profilecomplete4, Profilecomplete5
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ("id", "fullname")
+    list_display = ("id", "firstname")
 
 
 admin.site.register(models.User, UserAdmin)
