@@ -44,5 +44,9 @@ A REST api written in Django for people with deadlines
     ```
     
     ```
-    #test it
-    just run pytest 
+#### For testing using pytest total 12 test case:
+    ```bash
+        $ pytest
+    ```
+    
+    ```
