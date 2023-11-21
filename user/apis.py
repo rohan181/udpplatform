@@ -339,6 +339,9 @@ class UserUpdateAPIView(APIView):
 
             return Response({"id": user.id, "message": "User parent updated successfully parent to child"}, status=status.HTTP_200_OK)
         
+        else:
+            return Response({"user_type": ["Invalid user type."]}, status=status.HTTP_400_BAD_REQUEST)
+        
 
 
 

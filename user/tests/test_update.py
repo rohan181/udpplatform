@@ -204,6 +204,82 @@ class TestUserUpdateAPIView(APITestCase):
         self.assertEqual(self.user.state, 'UpdatedState')
         self.assertEqual(self.user.zip_code, '54321')
         self.assertEqual(self.user.user_type, 'parent')
+
+
+
+    def test_update_parent_to_wrong(self):
+
+        parent_user = User.objects.create_user(
+            user_type='parent',
+            firstname='Parent',
+            lastname='User',
+            email='parent@example.com',  # Add the email field
+            street='666',
+            city='aaa',
+            state='kkk',
+            zip_code='hellp'
+        
+            )
+        self.user = parent_user
+
+        url = reverse('user-update', args=[parent_user.id])
+        data = data = {
+            'user_type': 'wrong',
+            'firstname': 'UpdatedFirstName',
+            'lastname': 'UpdatedLastName',
+            'email': 'updated@example.com',
+            'street': '456 Updated St',
+            'city': 'UpdatedCity',
+            'state': 'UpdatedState',
+            'zip_code': '54321',
+        }
+        response = self.client.put(url, data, format='json')
+        print(response.content)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)   
+
+
+    def test_update_child_to_wrong(self):
+
+       parent_user1 = User.objects.create_user(
+            user_type='parent',
+            firstname='Parent',
+            lastname='User',
+            
+        )
+
+        # Create a child user with the parent_user field set to parent_user1
+       child_user = User.objects.create_user(
+            user_type='child',
+            firstname='Child',
+            lastname='User',
+            parent_user=parent_user1
+            
+        )
+
+        # Set the user for the test
+       self.user = child_user
+
+        # Define the update data
+       data = {
+            'user_type': 'wrong',
+            'firstname': 'UpdatedFirstName',
+            'lastname': 'UpdatedLastName',
+            'parent_user': parent_user1.id,
+            
+        }
+
+        # Get the URL for updating the user
+       url = reverse('user-update', args=[child_user.id])
+
+        # Make the update request
+       response = self.client.put(url, data, format='json')
+       response = self.client.put(url, data, format='json')
+       print(response.content)
+       self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)      
+
+
+
+
             
         
     
