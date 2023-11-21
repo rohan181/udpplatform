@@ -44,3 +44,5 @@ A REST api written in Django for people with deadlines
     ```
     
     ```
+    #test it
+    just run pytest 
