@@ -10,7 +10,7 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/", include("user.urls")),
+    path("", include("user.urls")),
     
 ]
 
